@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Elephant OG 🍓</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: Arial; text-align: center; padding: 20px; }
+    #chat { margin-top: 20px; border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: scroll; }
+    input { width: 60%; padding: 10px; font-size:16px; }
+    button { padding: 10px 20px; font-size:16px; }
+  </style>
+</head>
+<body>
+  <h1>Bienvenue sur Elephant OG 🍓</h1>
+  <input id="msg" placeholder="Écris ton message"/>
+  <button id="sendBtn">Envoyer</button>
+  <div id="chat"></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    document.getElementById("sendBtn").addEventListener("click", () => {
+      const msgInput = document.getElementById("msg");
+      const msg = msgInput.value.trim();
+      if(msg === "") return;
+      socket.emit("userMessage", msg);
+      msgInput.value = "";
+    });
+
+    socket.on("userReply", msg => {
+      const chatDiv = document.getElementById("chat");
+      chatDiv.innerHTML += "<div>"+msg+"</div>";
+      chatDiv.scrollTop = chatDiv.scrollHeight;
+    });
+  </script>
+</body>
+</html>
